@@ -35,6 +35,24 @@ Class User
         }else{
             return false;
         }
+    }
 
+    public function isEmailExists($dataEmail){
+        $query = "SELECT * FROM ".$this->table_name."
+                  WHERE email = :email";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute(["email" => $dataEmail]);
+        if($stmt->rowCount() > 0){
+            $data = $stmt->fetch();
+            $this->id = $data["id"];
+            $this->firstname = $data["firstname"];
+            $this->lastname = $data["lastname"];
+            $this->email = $data["email"];
+            $this->password = $data["password"];
+
+            return true;
+        }
+
+        return false;
     }
 }
