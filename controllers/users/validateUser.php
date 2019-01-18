@@ -16,7 +16,9 @@ if(isset($data->jwt)){
 if(false !== $jwtToken){
     $decodedUserData = JWT::decode($jwtToken, $key, ['HS256']);
     echo json_encode([
-        "message" => "ok",
+        "status"  => "true",
         "user"    => $decodedUserData->data
     ]);
+
+    return true;
 }
