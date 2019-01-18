@@ -18,7 +18,6 @@ $data = json_decode(file_get_contents("php://input"));
 $dataEmail = $data->email;
 $isEmailExists = $user->isEmailExists($dataEmail);
 
-
 if($isEmailExists && password_verify($data->password, $user->password)){
     $token = [
         "iss"  => $iss,
