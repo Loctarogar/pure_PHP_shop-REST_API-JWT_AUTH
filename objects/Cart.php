@@ -7,6 +7,7 @@ class Cart
     private $user_id;
     private $product_id;
     private $quantity;
+    private $orderId;
 
     public function __construct($db)
     {
@@ -26,6 +27,22 @@ class Cart
         return $stmt;
     }
 
+    public function deleteUsersCart(){
+        $date = date("Y-m-d H:i:s");
+        $query = "UPDATE ".$this->table_name."
+                  SET order_id = :orderId, deleted_at = :deletingTime
+                  WHERE user_id = :userId
+        ";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([
+            "orderId" => $this->orderId,
+            "userId"  => $this->user_id,
+            "deletingTime" => $date
+        ]);
+
+        return $stmt;
+    }
+
     public function addCart(){
         $isProductInCart = $this->isProductInCart();
         if(false === $isProductInCart){
@@ -40,7 +57,7 @@ class Cart
 
     private function updateProduct(){            // todo
         $query = "UPDATE ".$this->table_name."
-                  SET quantity = :quantity
+                  SET quantity = quantity + :quantity
                   WHERE user_id = :userId AND product_id = :productId
         ";
         $stmt = $this->db->prepare($query);
@@ -111,5 +128,10 @@ class Cart
     public function setQuantity($quantity): void
     {
         $this->quantity = $quantity;
+    }
+
+    public function setOrderId($orderId)
+    {
+        $this->orderId = $orderId;
     }
 }
