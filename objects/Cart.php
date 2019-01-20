@@ -31,7 +31,7 @@ class Cart
         $date = date("Y-m-d H:i:s");
         $query = "UPDATE ".$this->table_name."
                   SET order_id = :orderId, deleted_at = :deletingTime
-                  WHERE user_id = :userId
+                  WHERE user_id = :userId AND deleted_at IS NULL
         ";
         $stmt = $this->db->prepare($query);
         $stmt->execute([
@@ -72,7 +72,8 @@ class Cart
 
     private function insertProduct(){
         $query = "INSERT INTO ".$this->table_name."
-                  VALUES (0, :userId, :productId, :quantity)
+                  (user_id, product_id, quantity )
+                  VALUES (:userId, :productId, :quantity)
         ";
 
         $stmt = $this->db->prepare($query);

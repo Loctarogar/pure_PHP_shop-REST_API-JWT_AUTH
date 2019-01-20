@@ -16,10 +16,13 @@ class Order
                   VALUES (0, ?)
         ";
 
-        $stmt = $this->db->prelare($query);
+        $stmt = $this->db->prepare($query);
         $stmt->execute([$this->userId]);
-
-        return $stmt;
+        $orderId = $this->db->lastInsertId();
+        if($stmt){
+            return $orderId;
+        }
+        return false;
     }
 
     public function setUserId($userId){
