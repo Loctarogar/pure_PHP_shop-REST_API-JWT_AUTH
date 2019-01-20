@@ -13,6 +13,19 @@ class Cart
         $this->db = $db;
     }
 
+    public function getAllProductsForUser(){
+        $query = "SELECT product_id, quantity FROM ".$this->table_name."
+                  WHERE user_id = :userId
+        ";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([
+            "userId" => $this->user_id
+        ]);
+
+        return $stmt;
+    }
+
     public function addCart(){
         $isProductInCart = $this->isProductInCart();
         if(false === $isProductInCart){
