@@ -50,4 +50,42 @@ class Product
 
         return $stmt;
     }
+
+    public function isProductExists($productId){
+        $query = "SELECT * FROM ".$this->table_name." 
+                  WHERE id = :productId
+        ";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([
+            "productId" => $productId
+        ]);
+
+        if($stmt->fetchAll()){
+            return true;
+        };
+
+        return false;
+    }
+
+    public function deleteProduct($productId){
+        $isExists = $this->isProductExists($productId);
+        if(false === $isExists){
+            return false;
+        }
+        $query = "UPDATE ".$this->table_name."
+                  SET deleted_at = NOW()
+                  WHERE id = :productId AND deleted_at IS NULL
+        ";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([
+            "productId" => $productId
+        ]);
+        $isExecute = $stmt->rowCount();
+        if($isExecute){
+            return true;
+        }
+
+        return false;
+    }
 }
